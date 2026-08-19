@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { creatures, quiz, scoreCompatibility } from "./creatures";
+import { deskSceneStyles } from "./deskStyles";
 
 const asset = path => `${process.env.NODE_ENV === "production" ? "/cursor-creature-adoption-agency" : ""}${path}`;
 
@@ -99,6 +100,12 @@ const creatureVisitCopy = {
   },
 };
 
+const deskCuriosities = [
+  { id:"ribbon", label:"Ribbon sample", image:"/curiosities/ribbon.webp", title:"The ribbon remembers a breeze.", detail:"It unfurls across the habitat and waits for a creature to chase the loose end." },
+  { id:"window", label:"Pocket window", image:"/curiosities/window.webp", title:"A very small elsewhere opens.", detail:"For a moment, the visiting desk has its own night sky and two stars worth investigating." },
+  { id:"note", label:"Tiny note", image:"/curiosities/note.webp", title:"The question is finally revealed.", detail:"It asks: would you still choose each other if the cursor stopped moving?" },
+];
+
 function VisitJournal({ creature, trust, discoveries, reacting }) {
   const milestone = [...visitMilestones].reverse().find(item => trust >= item.minimum);
   const observations = [
@@ -123,6 +130,7 @@ function VisitingDesk({ creature, cursor, onBeginAdoption }) {
   const [snack,setSnack]=useState(null);
   const [reaction,setReaction]=useState(false);
   const [discoveries,setDiscoveries]=useState([]);
+  const [activeCuriosity,setActiveCuriosity]=useState(null);
   const deskRef=useRef(null);
   const last=useRef({x:0,y:0,t:Date.now()});
   const interact=e=>{
@@ -130,7 +138,7 @@ function VisitingDesk({ creature, cursor, onBeginAdoption }) {
     if(speed<.75){setTrust(n=>Math.min(100,n+.18));setMessage(`${creature.name} approves of your considerate pace.`)}
     else if(speed>2.7){setTrust(n=>Math.max(4,n-.3));setMessage(`${creature.name} needs a moment after that dramatic entrance.`)}
   };
-  useEffect(()=>{setTrust(12);setDiscoveries([]);setMessage(`Move gently. ${creature.name} is deciding what they think of you.`)},[creature]);
+  useEffect(()=>{setTrust(12);setDiscoveries([]);setActiveCuriosity(null);setMessage(`Move gently. ${creature.name} is deciding what they think of you.`)},[creature]);
   const offer=()=>{
     const id=Date.now();
     setSnack({id,x:cursor.x-16,y:cursor.y+16});
@@ -142,18 +150,20 @@ function VisitingDesk({ creature, cursor, onBeginAdoption }) {
   };
   const inspect=(id,label)=>{
     if(!discoveries.includes(id)){setDiscoveries(items=>[...items,id]);setTrust(n=>Math.min(100,n+7))}
+    setActiveCuriosity(id);
+    setReaction(true);
+    setTimeout(()=>setReaction(false),1100);
     setMessage(creatureVisitCopy[creature.id][id] || `${creature.name} investigated the ${label} and filed it under “promising.”`);
   };
+  const curiosity=deskCuriosities.find(item=>item.id===activeCuriosity);
   return <section className="visitingSection" id="desk" style={{"--pet":creature.color}}>
+    <style>{deskSceneStyles}</style>
     <div className="sectionLabel"><span>03</span><b>SUPERVISED VISITING DESK</b><i>MOVE GENTLY</i></div>
     <div className="desk" ref={deskRef} onPointerMove={interact}>
       <div className="deskGrid"/><div className="habitatPath"><i/><i/><i/><span>approved wandering route</span></div>
       <div className="deskMemo"><small>CARE NOTE</small><p>{creature.note}</p></div>
-      <div className="deskCuriosities" aria-label="Objects for the creature to investigate">
-        <button className={discoveries.includes("ribbon")?"found":""} onClick={()=>inspect("ribbon","ribbon sample")}><i className="ribbonMark"/><span>RIBBON<br/>SAMPLE</span></button>
-        <button className={discoveries.includes("window")?"found":""} onClick={()=>inspect("window","pocket window")}><i className="windowMark"/><span>POCKET<br/>WINDOW</span></button>
-        <button className={discoveries.includes("note")?"found":""} onClick={()=>inspect("note","tiny note")}><i className="noteMark">?</i><span>TINY<br/>NOTE</span></button>
-      </div>
+      <div className="deskCuriosities" aria-label="Objects for the creature to investigate"><small>CHOOSE AN OBJECT TO PLACE IN THE FIELD</small>{deskCuriosities.map(item=><button className={`${discoveries.includes(item.id)?"found":""} ${activeCuriosity===item.id?"active":""}`} onClick={()=>inspect(item.id,item.label.toLowerCase())} key={item.id}><img src={asset(item.image)} alt=""/><span><b>{item.label}</b><i>{discoveries.includes(item.id)?"INSPECTED":"PLACE IN FIELD"}</i></span></button>)}</div>
+      {curiosity&&<div key={curiosity.id} className={`curiosityScene scene-${curiosity.id}`}><button onClick={()=>setActiveCuriosity(null)} aria-label="Put curiosity away">×</button><div className="sceneGlow"/><img src={asset(curiosity.image)} alt={curiosity.label}/><article><small>FIELD EVENT / {curiosity.id.toUpperCase()}</small><h3>{curiosity.title}</h3><p>{curiosity.detail}</p><b>{creature.name.toUpperCase()} IS INVESTIGATING</b></article>{curiosity.id==="window"&&<div className="fieldStars"><i/><i/><i/><i/></div>}</div>}
       <div className="restingSpot"><span>OPTIONAL<br/>RESTING SPOT</span><i/></div>
       <CreatureFollower creature={creature} cursor={cursor} reacting={reaction}/>
       {snack&&<div key={snack.id} className="cursorCrumb" style={{left:snack.x,top:snack.y}}><i/><b>CURSOR CRUMB</b></div>}
