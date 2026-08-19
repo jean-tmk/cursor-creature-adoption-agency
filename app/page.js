@@ -34,7 +34,7 @@ function AgencyLedger({ selected }) {
   </aside>;
 }
 
-function CreatureFollower({ creature, cursor, active=true }) {
+function CreatureFollower({ creature, cursor, active=true, reacting=false }) {
   const position = useRef({x: 0, y: 0});
   const [draw, setDraw] = useState(position.current);
   useEffect(()=>{
@@ -48,8 +48,8 @@ function CreatureFollower({ creature, cursor, active=true }) {
     frame=requestAnimationFrame(animate); return()=>cancelAnimationFrame(frame);
   },[active, creature, cursor]);
   if(!active) return null;
-  return <div className={`follower tempo-${creature.tempo}`} style={{left:draw.x,top:draw.y,"--pet":creature.color}} aria-hidden="true">
-    <img src={asset(creature.image)} alt=""/><i/><span>{creature.name} is visiting</span>
+  return <div className={`follower tempo-${creature.tempo} ${reacting?"isSnacking":""}`} style={{left:draw.x,top:draw.y,"--pet":creature.color}} aria-hidden="true">
+    <img src={asset(creature.image)} alt=""/><i/><span>{reacting?"crumb accepted!":`${creature.name} is visiting`}</span>
   </div>;
 }
 
@@ -65,9 +65,64 @@ function ResidentCard({ creature, selected, onSelect }) {
   </article>;
 }
 
+const visitMilestones = [
+  { minimum: 0, title: "Cautiously observing", description: "Your visitor is watching the cursor from a professionally reasonable distance.", recommendation: "Try one slow circle or offer a crumb." },
+  { minimum: 25, title: "Considering friendship", description: "The agency has observed one softened posture and a possible approving blink.", recommendation: "Investigate something on the desk together." },
+  { minimum: 50, title: "Actively delighted", description: "Your visitor now associates this cursor with interesting objects and reliable snacks.", recommendation: "You may begin discussing names and toolbar arrangements." },
+  { minimum: 75, title: "Ready to follow", description: "All signs indicate a stable bond with a low risk of accidental tab abandonment.", recommendation: "The adoption desk is ready when you are." },
+];
+
+const creatureVisitCopy = {
+  mote: {
+    snack: "Mote catches the crumb, glows once, and stores the moment somewhere behind its ears.",
+    ribbon: "Mote studies the ribbon's shadow rather than the ribbon. This is apparently significant.",
+    window: "Mote peers through the pocket window and confirms that the other side is still there.",
+    note: "Mote reads the tiny note twice, then sits directly on the question mark.",
+  },
+  loop: {
+    snack: "Loop intercepts the crumb at remarkable speed and performs one unauthorized victory lap.",
+    ribbon: "Loop declares the ribbon a distant relative and immediately attempts a family reunion.",
+    window: "Loop enters through the pocket window and exits through the exact same pocket window.",
+    note: "Loop underlines the tiny note with its entire body. The note seems more official now.",
+  },
+  pip: {
+    snack: "Pip catches the crumb neatly, checks it for interesting details, and approves the texture.",
+    ribbon: "Pip measures the ribbon with three careful hops and records an excellent result.",
+    window: "Pip checks all four corners of the pocket window before looking through the middle.",
+    note: "Pip discovers the question mark and quietly upgrades it to a very important question mark.",
+  },
+  velvet: {
+    snack: "Velvet lets the crumb orbit once before accepting it with a slow and dignified blink.",
+    ribbon: "Velvet arranges the ribbon into a comfortable thought and rests beside it for a moment.",
+    window: "Velvet watches an imaginary midnight through the pocket window.",
+    note: "Velvet guards the tiny note as though it contains the ending to an unfinished dream.",
+  },
+};
+
+function VisitJournal({ creature, trust, discoveries, reacting }) {
+  const milestone = [...visitMilestones].reverse().find(item => trust >= item.minimum);
+  const observations = [
+    { id: "arrival", complete: true, text: `${creature.name} entered the supervised habitat.` },
+    { id: "pace", complete: trust >= 18, text: "Cursor movement registered as considerate." },
+    { id: "snack", complete: trust >= 26, text: "At least one browser crumb was accepted." },
+    { id: "curiosity", complete: discoveries.length > 0, text: "A desk curiosity received a full inspection." },
+    { id: "bond", complete: trust >= 50, text: "Mutual following appears increasingly likely." },
+  ];
+  const filed = observations.filter(item => item.complete).length;
+  return <div className={`visitJournal ${reacting ? "recording" : ""}`}>
+    <header><div><small>LIVE BEHAVIOR FILE</small><b>{String(Math.round(trust)).padStart(3,"0")} / 100</b></div><i>{reacting ? "RECORDING SNACK RESPONSE" : "OBSERVATION ACTIVE"}</i></header>
+    <section><small>CURRENT READING</small><h3>{milestone.title}</h3><p>{milestone.description}</p><em>{milestone.recommendation}</em></section>
+    <ol>{observations.map((item,index)=><li className={item.complete?"complete":""} key={item.id}><b>{String(index+1).padStart(2,"0")}</b><span>{item.text}</span><i>{item.complete?"FILED":"WAITING"}</i></li>)}</ol>
+    <footer><span>VISITOR / {creature.name.toUpperCase()}</span><span>NOTES / {filed} OF {observations.length}</span></footer>
+  </div>;
+}
+
 function VisitingDesk({ creature, cursor, onBeginAdoption }) {
   const [trust,setTrust]=useState(12);
   const [message,setMessage]=useState("Move around the desk. Let them decide what they think of you.");
+  const [snack,setSnack]=useState(null);
+  const [reaction,setReaction]=useState(false);
+  const [discoveries,setDiscoveries]=useState([]);
   const deskRef=useRef(null);
   const last=useRef({x:0,y:0,t:Date.now()});
   const interact=e=>{
@@ -75,13 +130,36 @@ function VisitingDesk({ creature, cursor, onBeginAdoption }) {
     if(speed<.75){setTrust(n=>Math.min(100,n+.18));setMessage(`${creature.name} approves of your considerate pace.`)}
     else if(speed>2.7){setTrust(n=>Math.max(4,n-.3));setMessage(`${creature.name} needs a moment after that dramatic entrance.`)}
   };
-  const offer=()=>{setTrust(n=>Math.min(100,n+14));setMessage(`${creature.name} accepted one tiny browser crumb.`)};
+  useEffect(()=>{setTrust(12);setDiscoveries([]);setMessage(`Move gently. ${creature.name} is deciding what they think of you.`)},[creature]);
+  const offer=()=>{
+    const id=Date.now();
+    setSnack({id,x:cursor.x-16,y:cursor.y+16});
+    setReaction(true);
+    setTrust(n=>Math.min(100,n+14));
+    setMessage(creatureVisitCopy[creature.id].snack);
+    setTimeout(()=>setSnack(current=>current?.id===id?null:current),1100);
+    setTimeout(()=>setReaction(false),1350);
+  };
+  const inspect=(id,label)=>{
+    if(!discoveries.includes(id)){setDiscoveries(items=>[...items,id]);setTrust(n=>Math.min(100,n+7))}
+    setMessage(creatureVisitCopy[creature.id][id] || `${creature.name} investigated the ${label} and filed it under “promising.”`);
+  };
   return <section className="visitingSection" id="desk" style={{"--pet":creature.color}}>
     <div className="sectionLabel"><span>03</span><b>SUPERVISED VISITING DESK</b><i>MOVE GENTLY</i></div>
     <div className="desk" ref={deskRef} onPointerMove={interact}>
-      <div className="deskGrid"/><div className="deskMemo"><small>CARE NOTE</small><p>{creature.note}</p></div>
-      <CreatureFollower creature={creature} cursor={cursor}/>
+      <div className="deskGrid"/><div className="habitatPath"><i/><i/><i/><span>approved wandering route</span></div>
+      <div className="deskMemo"><small>CARE NOTE</small><p>{creature.note}</p></div>
+      <div className="deskCuriosities" aria-label="Objects for the creature to investigate">
+        <button className={discoveries.includes("ribbon")?"found":""} onClick={()=>inspect("ribbon","ribbon sample")}><i className="ribbonMark"/><span>RIBBON<br/>SAMPLE</span></button>
+        <button className={discoveries.includes("window")?"found":""} onClick={()=>inspect("window","pocket window")}><i className="windowMark"/><span>POCKET<br/>WINDOW</span></button>
+        <button className={discoveries.includes("note")?"found":""} onClick={()=>inspect("note","tiny note")}><i className="noteMark">?</i><span>TINY<br/>NOTE</span></button>
+      </div>
+      <div className="restingSpot"><span>OPTIONAL<br/>RESTING SPOT</span><i/></div>
+      <CreatureFollower creature={creature} cursor={cursor} reacting={reaction}/>
+      {snack&&<div key={snack.id} className="cursorCrumb" style={{left:snack.x,top:snack.y}}><i/><b>CURSOR CRUMB</b></div>}
       <div className="trustMeter"><small>MUTUAL TRUST</small><b>{Math.round(trust)}%</b><i><span style={{width:`${trust}%`}}/></i></div>
+      <div className="visitPrompt"><b>{reaction?"SNACK RECEIVED":"VISIT IN PROGRESS"}</b><span>{discoveries.length}/3 desk curiosities inspected</span></div>
+      <VisitJournal creature={creature} trust={trust} discoveries={discoveries} reacting={reaction}/>
       <div className="deskActions"><p>{message}</p><button onClick={offer}>OFFER A CURSOR CRUMB</button><button className="primary" onClick={onBeginAdoption} disabled={trust<25}>BEGIN ADOPTION</button></div>
     </div>
   </section>;
