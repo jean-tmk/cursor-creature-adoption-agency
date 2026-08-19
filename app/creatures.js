@@ -1,6 +1,6 @@
 export const creatures = [
   {
-    id: "mote", name: "Mote", image: "/creatures/mote.png", color: "#aaa3ff", ink: "#29284b",
+    id: "mote", name: "Mote", image: "/creatures/mote.webp", color: "#aaa3ff", ink: "#29284b",
     species: "Pocket comet", age: "11 browser moons", size: "smaller than a bookmark",
     tempo: "gentle", distance: 72, lag: 0.12,
     traits: ["quiet", "observant", "collects abandoned tabs"],
@@ -9,7 +9,7 @@ export const creatures = [
     note: "May sparkle when you finally close a tab.",
   },
   {
-    id: "loop", name: "Loop", image: "/creatures/loop.png", color: "#ff694f", ink: "#3e2234",
+    id: "loop", name: "Loop", image: "/creatures/loop.webp", color: "#ff694f", ink: "#3e2234",
     species: "Ribbon ferret", age: "3 refreshes", size: "exactly one flourish",
     tempo: "fast", distance: 38, lag: 0.045,
     traits: ["bold", "curious", "professionally underfoot"],
@@ -18,7 +18,7 @@ export const creatures = [
     note: "Will attempt to underline important sentences.",
   },
   {
-    id: "pip", name: "Pip", image: "/creatures/pip.png", color: "#f1b82d", ink: "#33293e",
+    id: "pip", name: "Pip", image: "/creatures/pip.webp", color: "#f1b82d", ink: "#33293e",
     species: "Petal mousebird", age: "newly cached", size: "two paper clips tall",
     tempo: "bouncy", distance: 52, lag: 0.075,
     traits: ["bright", "tidy", "notices tiny buttons"],
@@ -27,7 +27,7 @@ export const creatures = [
     note: "Chirps silently when hovering over links.",
   },
   {
-    id: "velvet", name: "Velvet", image: "/creatures/velvet.png", color: "#70c9bb", ink: "#26334a",
+    id: "velvet", name: "Velvet", image: "/creatures/velvet.webp", color: "#70c9bb", ink: "#26334a",
     species: "Mothcat familiar", age: "7 soft updates", size: "a small floating thought",
     tempo: "dreamy", distance: 84, lag: 0.16,
     traits: ["patient", "dreamy", "guardian of unfinished forms"],
