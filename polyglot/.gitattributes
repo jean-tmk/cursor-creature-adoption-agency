@@ -1,0 +1,57 @@
+polyglot/languages/assembly/module.asm linguist-detectable=true linguist-language=Assembly
+polyglot/languages/ags-script/module.asc linguist-detectable=true linguist-language=AGS Script
+polyglot/languages/actionscript/module.as linguist-detectable=true linguist-language=ActionScript
+polyglot/languages/apollo-guidance-computer/module.agc linguist-detectable=true linguist-language=Apollo Guidance Computer
+polyglot/languages/b-formal-method/module.mch linguist-detectable=true linguist-language=B (Formal Method)
+polyglot/languages/bibtex-style/module.bst linguist-detectable=true linguist-language=BibTeX Style
+polyglot/languages/brainfuck/module.b linguist-detectable=true linguist-language=Brainfuck
+polyglot/languages/cmake/CMakeLists.txt linguist-detectable=true linguist-language=CMake
+polyglot/languages/cap-n-proto/module.capnp linguist-detectable=true linguist-language=Cap'n Proto
+polyglot/languages/clarity/module.clar linguist-detectable=true linguist-language=Clarity
+polyglot/languages/common-workflow-language/module.cwl linguist-detectable=true linguist-language=Common Workflow Language
+polyglot/languages/cypher/module.cyp linguist-detectable=true linguist-language=Cypher
+polyglot/languages/denizenscript/module.dsc linguist-detectable=true linguist-language=DenizenScript
+polyglot/languages/earthly/Earthfile.txt linguist-detectable=true linguist-language=Earthly
+polyglot/languages/euphoria/module.e linguist-detectable=true linguist-language=Euphoria
+polyglot/languages/fennel/module.fnl linguist-detectable=true linguist-language=Fennel
+polyglot/languages/frege/module.fr linguist-detectable=true linguist-language=Frege
+polyglot/languages/glsl/module.glsl linguist-detectable=true linguist-language=GLSL
+polyglot/languages/glimmer-js/module.gjs linguist-detectable=true linguist-language=Glimmer JS
+polyglot/languages/groovy-server-pages/module.gsp linguist-detectable=true linguist-language=Groovy Server Pages
+polyglot/languages/holyc/module.hc linguist-detectable=true linguist-language=HolyC
+polyglot/languages/imagej-macro/module.ijm linguist-detectable=true linguist-language=ImageJ Macro
+polyglot/languages/jass/module.j linguist-detectable=true linguist-language=JASS
+polyglot/languages/javascript-erb/module.js.erb linguist-detectable=true linguist-language=JavaScript+ERB
+polyglot/languages/kframework/module.k linguist-detectable=true linguist-language=KFramework
+polyglot/languages/lsl/module.lsl linguist-detectable=true linguist-language=LSL
+polyglot/languages/lilypond/module.ly linguist-detectable=true linguist-language=LilyPond
+polyglot/languages/lobster/module.lobster linguist-detectable=true linguist-language=Lobster
+polyglot/languages/matlab/module.matlab linguist-detectable=true linguist-language=MATLAB
+polyglot/languages/max/module.maxpat linguist-detectable=true linguist-language=Max
+polyglot/languages/modelica/module.mo linguist-detectable=true linguist-language=Modelica
+polyglot/languages/motoko/module.mo linguist-detectable=true linguist-language=Motoko
+polyglot/languages/nearley/module.ne linguist-detectable=true linguist-language=Nearley
+polyglot/languages/nix/module.nix linguist-detectable=true linguist-language=Nix
+polyglot/languages/objective-c/module.m linguist-detectable=true linguist-language=Objective-C
+polyglot/languages/openqasm/module.qasm linguist-detectable=true linguist-language=OpenQASM
+polyglot/languages/peg-js/module.pegjs linguist-detectable=true linguist-language=PEG.js
+polyglot/languages/pascal/module.pas linguist-detectable=true linguist-language=Pascal
+polyglot/languages/pony/module.pony linguist-detectable=true linguist-language=Pony
+polyglot/languages/promela/module.pml linguist-detectable=true linguist-language=Promela
+polyglot/languages/qt-script/installscript.qs linguist-detectable=true linguist-language=Qt Script
+polyglot/languages/rpgle/module.rpgle linguist-detectable=true linguist-language=RPGLE
+polyglot/languages/redcode/module.cw linguist-detectable=true linguist-language=Redcode
+polyglot/languages/routeros-script/module.rsc linguist-detectable=true linguist-language=RouterOS Script
+polyglot/languages/scala/module.scala linguist-detectable=true linguist-language=Scala
+polyglot/languages/singularity/Singularity.txt linguist-detectable=true linguist-language=Singularity
+polyglot/languages/solidity/module.sol linguist-detectable=true linguist-language=Solidity
+polyglot/languages/swift/module.swift linguist-detectable=true linguist-language=Swift
+polyglot/languages/tape/module.tape linguist-detectable=true linguist-language=Tape
+polyglot/languages/typespec/module.tsp linguist-detectable=true linguist-language=TypeSpec
+polyglot/languages/vbscript/module.vbs linguist-detectable=true linguist-language=VBScript
+polyglot/languages/vyper/module.vy linguist-detectable=true linguist-language=Vyper
+polyglot/languages/x10/module.x10 linguist-detectable=true linguist-language=X10
+polyglot/languages/yara/module.yar linguist-detectable=true linguist-language=YARA
+polyglot/languages/ec/module.ec linguist-detectable=true linguist-language=eC
+polyglot/languages/sed/module.sed linguist-detectable=true linguist-language=sed
+polyglot/majority/exhibit_registry.asm linguist-detectable=true linguist-language=Assembly
